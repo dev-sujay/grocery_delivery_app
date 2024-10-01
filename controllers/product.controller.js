@@ -19,7 +19,7 @@ export const addProduct = async (req, res) => {
     await product.save();
     res.status(201).json(product);
   } catch (error) {
-    res.status(500).json({ msg: 'Server Error', error });
+    res.status(500).json({ msg: error.message });
   }
 };
 
@@ -29,7 +29,7 @@ export const getAllProducts = async (req, res) => {
     const products = await Product.find().populate('category supplier');
     res.status(200).json(products);
   } catch (error) {
-    res.status(500).json({ msg: 'Server Error', error });
+    res.status(500).json({ msg: error.message });
   }
 };
 
@@ -42,7 +42,7 @@ export const getProductById = async (req, res) => {
     }
     res.status(200).json(product);
   } catch (error) {
-    res.status(500).json({ msg: 'Server Error', error });
+    res.status(500).json({ msg: error.message });
   }
 };
 
@@ -63,7 +63,7 @@ export const updateProduct = async (req, res) => {
 
     res.status(200).json(product);
   } catch (error) {
-    res.status(500).json({ msg: 'Server Error', error });
+    res.status(500).json({ msg: error.message });
   }
 };
 
@@ -77,6 +77,6 @@ export const deleteProduct = async (req, res) => {
 
     res.status(200).json({ msg: 'Product deleted' });
   } catch (error) {
-    res.status(500).json({ msg: 'Server Error', error });
+    res.status(500).json({ msg: error.message });
   }
 };

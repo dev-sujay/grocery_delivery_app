@@ -8,8 +8,8 @@ import {
 
 const router = express.Router();
 
-router.post('/', placeOrder);
-router.get('/', getOrdersByUser);
+router.post('/:userId', placeOrder);
+router.get('/:userId', getOrdersByUser);
 router.patch('/:id/status', updateOrderStatus);
 router.delete('/:id', deleteOrder);
 

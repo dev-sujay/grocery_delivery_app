@@ -6,7 +6,7 @@ export const placeOrder = async (req, res) => {
 
   try {
     const order = new Order({
-      userId: req.user.id,
+      userId: req.params.userId,
       items,
       totalAmount,
       deliveryAddress
@@ -15,17 +15,17 @@ export const placeOrder = async (req, res) => {
     await order.save();
     res.status(201).json(order);
   } catch (error) {
-    res.status(500).json({ msg: 'Server Error', error });
+    res.status(500).json({ msg: error.message });
   }
 };
 
 // Get All Orders for a User
 export const getOrdersByUser = async (req, res) => {
   try {
-    const orders = await Order.find({ userId: req.user.id }).populate('items.product');
+    const orders = await Order.find({ userId: req.params.userId }).populate('items.product');
     res.status(200).json(orders);
   } catch (error) {
-    res.status(500).json({ msg: 'Server Error', error });
+    res.status(500).json({ msg: error.message });
   }
 };
 
@@ -46,7 +46,7 @@ export const updateOrderStatus = async (req, res) => {
 
     res.status(200).json(order);
   } catch (error) {
-    res.status(500).json({ msg: 'Server Error', error });
+    res.status(500).json({ msg: error.message });
   }
 };
 
@@ -60,6 +60,6 @@ export const deleteOrder = async (req, res) => {
 
     res.status(200).json({ msg: 'Order deleted' });
   } catch (error) {
-    res.status(500).json({ msg: 'Server Error', error });
+    res.status(500).json({ msg: error.message });
   }
 };

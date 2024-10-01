@@ -8,7 +8,7 @@ import {
 const router = express.Router();
 
 router.post('/process', processPayment);
-router.get('/user', getPaymentsByUser);
+router.get('/user/:userId', getPaymentsByUser);
 router.patch('/:id/status', updatePaymentStatus);
 
 export default router;

@@ -23,7 +23,7 @@ const userSchema = new Schema({
     },
     role: {
         type: String,
-        enum: ['customer', 'admin', 'delivery_agent'],
+        enum: ['customer', 'admin', 'deliveryAgent'],
         default: 'customer'
     },
     password: {
@@ -33,7 +33,19 @@ const userSchema = new Schema({
     orderHistory: [{
         type: Schema.Types.ObjectId,
         ref: 'Order'
-    }]
+    }],
+    deliveryHistory: [{
+        type: Schema.Types.ObjectId,
+        ref: 'Delivery'
+    }],
+    location : {
+        lattitude : {
+            type : Number,
+        },
+        longitude : {
+            type : Number,
+        }
+    }
 }, {
     timestamps: true
 });

@@ -36,7 +36,7 @@ export const registerUser = async (req, res) => {
 
     res.status(201).json({ token, user });
   } catch (error) {
-    res.status(500).json({ msg: 'Server Error', error });
+    res.status(500).json({ msg: error.message });
   }
 };
 
@@ -61,17 +61,27 @@ export const loginUser = async (req, res) => {
 
     res.status(200).json({ token, user });
   } catch (error) {
-    res.status(500).json({ msg: 'Server Error', error });
+    res.status(500).json({ msg: error.message });
   }
 };
 
 // Get User Profile
 export const getUserProfile = async (req, res) => {
   try {
-    const user = await User.findById(req.user.id).select('-password');
+    const user = await User.findById(req.params.id).select('-password');
     res.status(200).json(user);
   } catch (error) {
-    res.status(500).json({ msg: 'Server Error', error });
+    res.status(500).json({ msg: error.message });
+  }
+};
+
+//get all users
+export const getAllUsers = async (req, res) => {
+  try {
+    const users = await User.find().select('-password');
+    res.status(200).json(users);
+  } catch (error) {
+    res.status(500).json({ msg: error.message });
   }
 };
 
@@ -80,13 +90,13 @@ export const updateUser = async (req, res) => {
   const { name, phoneNumber, address } = req.body;
   try {
     const user = await User.findByIdAndUpdate(
-      req.user.id,
+      req.params.id,
       { name, phoneNumber, address },
       { new: true }
     ).select('-password');
 
     res.status(200).json(user);
   } catch (error) {
-    res.status(500).json({ msg: 'Server Error', error });
+    res.status(500).json({ msg: error.message });
   }
 };

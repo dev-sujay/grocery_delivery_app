@@ -1,25 +1,27 @@
 import { Delivery } from '../models/delivery.model.js';
 import { Order } from '../models/order.model.js';
+import { User } from '../models/user.model.js';
 
 // Assign Delivery to an Order
 export const assignDelivery = async (req, res) => {
-  const { orderId, deliveryAgent, deliveryDate } = req.body;
+  const { orderId } = req.body;
 
   try {
-    const delivery = new Delivery({
-      orderId,
-      deliveryAgent,
-      deliveryDate
-    });
+    const delivery = new Delivery(req.body);
 
     await delivery.save();
 
     // Update the order's delivery status
-    await Order.findByIdAndUpdate(orderId, { deliveryStatus: 'Assigned' });
+    await Order.findByIdAndUpdate(orderId, { deliveryStatus: 'assigned' });
+
+    // record this delivery in the delivery agent's deliveryHistory
+    await User.findByIdAndUpdate(req.user.userId, {
+      $push: { deliveryHistory: delivery._id }
+    });
 
     res.status(201).json(delivery);
   } catch (error) {
-    res.status(500).json({ msg: 'Server Error', error });
+    res.status(500).json({ msg: error.message });
   }
 };
 
@@ -33,7 +35,7 @@ export const getDeliveryByOrder = async (req, res) => {
 
     res.status(200).json(delivery);
   } catch (error) {
-    res.status(500).json({ msg: 'Server Error', error });
+    res.status(500).json({ msg: error.message });
   }
 };
 
@@ -54,6 +56,6 @@ export const updateDeliveryStatus = async (req, res) => {
 
     res.status(200).json(delivery);
   } catch (error) {
-    res.status(500).json({ msg: 'Server Error', error });
+    res.status(500).json({ msg: error.message });
   }
 };

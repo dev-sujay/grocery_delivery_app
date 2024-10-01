@@ -15,14 +15,12 @@ const deliverySchema = new Schema({
   },
   status: {
     type: String,
-    enum: ['in-progress', 'delivered'],
-    default: 'in-progress'
+    enum: ['assigned', 'in-progress', 'delivered'],
+    default: 'assigned'
   },
   deliveryTime: {
-    type: Date
-  },
-  trackingInfo: {
-    type: String // You can add more fields for GPS tracking if needed
+    type: Date,
+    required: true
   },
   deliveryFee: {
     type: Number,

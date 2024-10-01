@@ -3,45 +3,47 @@ import { Order } from '../models/order.model.js';
 
 // Process Payment
 export const processPayment = async (req, res) => {
-  const { orderId, paymentMethod, amount, status } = req.body;
+  const { orderId, paymentMethod, amount, amountPaid, userId, paymentStatus } = req.body;
 
   try {
     const payment = new Payment({
       orderId,
       paymentMethod,
       amount,
-      status
+      amountPaid,
+      userId,
+      paymentStatus
     });
 
     await payment.save();
 
     // Update order payment status
-    await Order.findByIdAndUpdate(orderId, { paymentStatus: 'Paid' });
+    await Order.findByIdAndUpdate(orderId, { paymentStatus});
 
     res.status(201).json(payment);
   } catch (error) {
-    res.status(500).json({ msg: 'Server Error', error });
+    res.status(500).json({ msg: error.message });
   }
 };
 
 // Get Payments for a User
 export const getPaymentsByUser = async (req, res) => {
   try {
-    const payments = await Payment.find({ userId: req.user.id }).populate('orderId');
+    const payments = await Payment.find({ userId: req.params.userId }).populate('orderId');
     res.status(200).json(payments);
   } catch (error) {
-    res.status(500).json({ msg: 'Server Error', error });
+    res.status(500).json({ msg: error.message });
   }
 };
 
 // Update Payment Status
 export const updatePaymentStatus = async (req, res) => {
-  const { status } = req.body;
+  const { paymentStatus } = req.body;
 
   try {
     const payment = await Payment.findByIdAndUpdate(
       req.params.id,
-      { status },
+      { paymentStatus },
       { new: true }
     );
 
@@ -51,6 +53,6 @@ export const updatePaymentStatus = async (req, res) => {
 
     res.status(200).json(payment);
   } catch (error) {
-    res.status(500).json({ msg: 'Server Error', error });
+    res.status(500).json({ msg: error.message });
   }
 };
